@@ -16,7 +16,7 @@ A full-stack cloud cost optimization dashboard for discovering Azure resources, 
 docker compose up --build
 ```
 
-Open `http://localhost:5173`. The API is at `http://localhost:8080/api/v1`.
+Open `http://localhost:5173`. The API is at `http://localhost:8080/api/v1` (PostgreSQL is exposed on port `5433` to avoid common local conflicts).
 
 Without Azure credentials the application seeds realistic demo recommendations. To enable Azure discovery, set `AZURE_SUBSCRIPTION_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET`.
 
@@ -35,4 +35,3 @@ Without Azure credentials the application seeds realistic demo recommendations. 
 1. Provision foundation: `cd infra/terraform && terraform init && terraform apply`
 2. Build/push images to your registry, then update image names in `infra/kubernetes/`.
 3. Apply: `kubectl apply -f infra/kubernetes/`
-
