@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cloud-cost-optimizer
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/costoptimizer}
+    username: ${SPRING_DATASOURCE_USERNAME:costoptimizer}
+    password: ${SPRING_DATASOURCE_PASSWORD:costoptimizer}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+server:
+  port: 8080
+azure:
+  subscription-id: ${AZURE_SUBSCRIPTION_ID:}

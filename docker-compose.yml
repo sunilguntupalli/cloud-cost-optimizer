@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: costoptimizer
+      POSTGRES_USER: costoptimizer
+      POSTGRES_PASSWORD: costoptimizer
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U costoptimizer"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  api:
+    build: ./backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/costoptimizer
+      SPRING_DATASOURCE_USERNAME: costoptimizer
+      SPRING_DATASOURCE_PASSWORD: costoptimizer
+    ports: ["8080:8080"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+  web:
+    build: ./frontend
+    ports: ["5173:80"]
+    depends_on: [api]
