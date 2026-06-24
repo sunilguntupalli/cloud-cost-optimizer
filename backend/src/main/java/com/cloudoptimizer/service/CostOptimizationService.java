@@ -10,6 +10,8 @@ import com.cloudoptimizer.repository.RecommendationRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.*;
@@ -26,7 +28,10 @@ public class CostOptimizationService {
   public Optional<CloudResource> resource(Long id){return resources.findById(id);}
   public List<Recommendation> allRecommendations(){return recommendations.findAll();}
   public Optional<Recommendation> recommendation(Long id){return recommendations.findById(id);}
-  public Recommendation updateStatus(Long id,String status){ Recommendation r=recommendations.findById(id).orElseThrow(); r.setStatus(status.toUpperCase()); return recommendations.save(r);}
+  public Recommendation updateStatus(Long id,String status){
+    if(!Set.of("OPEN","IN_PROGRESS","DISMISSED").contains(status.toUpperCase())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Status must be OPEN, IN_PROGRESS, or DISMISSED");
+    Recommendation r=recommendations.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Recommendation not found")); r.setStatus(status.toUpperCase()); return recommendations.save(r);
+  }
   public Map<String,Object> summary(){ BigDecimal spend=resources.findAll().stream().map(CloudResource::getMonthlyCost).reduce(BigDecimal.ZERO,BigDecimal::add); BigDecimal savings=recommendations.findAll().stream().filter(r->!"DISMISSED".equals(r.getStatus())).map(Recommendation::getMonthlySavings).reduce(BigDecimal.ZERO,BigDecimal::add); return Map.of("monthlySpend",spend,"potentialSavings",savings,"resources",resources.count(),"openRecommendations",recommendations.findAll().stream().filter(r->"OPEN".equals(r.getStatus())).count(),"period",YearMonth.now().toString(),"costSource",costs.latest().get("source")); }
   public List<Map<String,Object>> trends(){return List.of(point("Jan",1870,220),point("Feb",1760,265),point("Mar",1684,341),point("Apr",1558,412),point("May",1491,498),point("Jun",1441,573));}
   private Map<String,Object> point(String month,int spend,int savings){return Map.of("month",month,"spend",spend,"savings",savings);}
