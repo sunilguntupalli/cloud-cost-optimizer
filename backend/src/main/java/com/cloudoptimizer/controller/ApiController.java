@@ -2,6 +2,7 @@ package com.cloudoptimizer.controller;
 
 import com.cloudoptimizer.model.*;
 import com.cloudoptimizer.service.CostOptimizationService;
+import com.cloudoptimizer.service.AzureCostService;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,12 @@ import java.util.*;
 
 @RestController @RequestMapping("/api/v1") @CrossOrigin(origins="*")
 public class ApiController {
- private final CostOptimizationService service; public ApiController(CostOptimizationService service){this.service=service;}
+ private final CostOptimizationService service; private final AzureCostService costs; public ApiController(CostOptimizationService service,AzureCostService costs){this.service=service;this.costs=costs;}
  @GetMapping("/health") Map<String,String> health(){return Map.of("status","UP","service","cloud-cost-optimizer");}
  @GetMapping("/dashboard/summary") Map<String,Object> summary(){return service.summary();}
  @GetMapping("/dashboard/trends") List<Map<String,Object>> trends(){return service.trends();}
+ @GetMapping("/costs/latest") Map<String,Object> latestCost(){return costs.latest();}
+ @PostMapping("/costs/sync") Map<String,Object> syncCosts(){return costs.sync();}
  @GetMapping("/resources") List<CloudResource> resources(){return service.allResources();}
  @GetMapping("/resources/{id}") ResponseEntity<CloudResource> resource(@PathVariable Long id){return service.resource(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());}
  @PostMapping("/resources/discover") Map<String,Object> discover(){return service.discover();}
