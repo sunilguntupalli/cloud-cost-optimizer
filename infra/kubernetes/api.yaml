@@ -11,6 +11,14 @@ spec:
         - name: api
           image: YOUR_REGISTRY/cost-optimizer-api:latest
           ports: [{containerPort: 8080}]
+          readinessProbe:
+            httpGet: {path: /actuator/health/readiness, port: 8080}
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /actuator/health/liveness, port: 8080}
+            initialDelaySeconds: 40
+            periodSeconds: 20
           env:
             - {name: SPRING_DATASOURCE_URL, valueFrom: {secretKeyRef: {name: database, key: url}}}
             - {name: SPRING_DATASOURCE_USERNAME, valueFrom: {secretKeyRef: {name: database, key: username}}}

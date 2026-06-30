@@ -11,6 +11,14 @@ spec:
         - name: web
           image: YOUR_REGISTRY/cost-optimizer-web:latest
           ports: [{containerPort: 80}]
+          readinessProbe:
+            httpGet: {path: /, port: 80}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /, port: 80}
+            initialDelaySeconds: 15
+            periodSeconds: 20
           resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 256Mi}}
 ---
 apiVersion: v1

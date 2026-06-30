@@ -7,9 +7,22 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:costoptimizer}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
 server:
   port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
 azure:
   subscription-id: ${AZURE_SUBSCRIPTION_ID:}

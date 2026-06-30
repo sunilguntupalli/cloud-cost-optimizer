@@ -20,6 +20,8 @@ Open `http://localhost:5173`. The API is at `http://localhost:8080/api/v1` (Post
 
 Without Azure credentials the application seeds realistic demo recommendations. To enable Azure discovery, set `AZURE_SUBSCRIPTION_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET`.
 
+Database changes are versioned with Flyway under `backend/src/main/resources/db/migration`. GitHub Actions verifies the Java tests, React production build, and both container images on every pull request.
+
 ## API surface
 
 | Area | Endpoints |
