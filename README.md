@@ -1,6 +1,23 @@
 # Cloud Cost Optimizer
 
+[![CI](https://github.com/sunilguntupalli/cloud-cost-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/sunilguntupalli/cloud-cost-optimizer/actions/workflows/ci.yml)
+
 A full-stack cloud cost optimization dashboard for discovering Azure resources, analyzing utilization, and surfacing savings opportunities across compute and storage.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    User[FinOps user] --> Web[React dashboard]
+    Web --> API[Spring Boot API]
+    API --> DB[(PostgreSQL)]
+    API --> ARM[Azure Resource Manager]
+    API --> Engine[Optimization engine]
+    Engine --> API
+    Terraform[Terraform] --> Azure[Azure infrastructure]
+    Kubernetes[Kubernetes] --> Web
+    Kubernetes --> API
+```
 
 ## Stack
 
